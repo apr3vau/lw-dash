@@ -340,6 +340,7 @@ has been modified."
 
 (defun main ()
   (capi:display (make-instance 'dash-main-window)))
+(export 'main)
 
 ;(generate-docset :capi "~/common-lisp/dash/")
 ;(capi:display (make-instance 'dash-main-window))
