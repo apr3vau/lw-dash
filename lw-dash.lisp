@@ -295,7 +295,7 @@ has been modified."
    (name-option
     capi:option-pane
     :title "Docset Name:" :title-position :left
-    :items '(:capi :corba :deliv :editor :ide :kw :lw :objc :rnig))
+    :items '(:capi :corba :deliv :editor :fli :ide :kw :lw :objc :rnig))
    (output-input
     capi:text-input-pane 
     :title "Output location:"
