@@ -65,31 +65,38 @@
 (defun create-icon (name dest)
   "Create some (interesting) icons for your docset :P"
   (let ((dest-image (string-append (namestring (truename dest)) (string-upcase name) ".docset" "/" +docset-icon-filename+))
-        (dest-image2x (string-append (namestring (truename dest)) (string-upcase name) ".docset" "/" +docset-icon-filename2x+))
-        (port (capi:contain (make-instance 'capi:output-pane) :display-state :hidden)))
+        (dest-image2x (string-append (namestring (truename dest)) (string-upcase name) ".docset" "/" +docset-icon-filename2x+)))
     ;; Draw something similar... with an initial on it :P
-    (gp:with-pixmap-graphics-port (pixmap port 16 16 :background :transparent :clear t)
-      (let* ((font (gp:find-best-font pixmap (gp:make-font-description
-                                              :family "Courier New" :size 16 :weight :bold)))
-             (char (char (string-upcase name) 0))
-             (width (gp:get-char-width pixmap char font))
-             (ascent (gp:get-char-ascent pixmap char font)))
-        (gp:draw-circle pixmap (* 16 0.35) 8 (* 8 0.9) :foreground :deepskyblue2 :filled t)
-        (gp:draw-circle pixmap (* 16 0.65) 8 8 :foreground :dodgerblue2 :filled t)
-        (gp:draw-circle pixmap 8 8 6 :foreground :white :filled t)
-        (gp:draw-character pixmap char (/ (- 16 width) 2) ascent :font font :foreground :midnightblue)
-        (gp:externalize-and-write-image pixmap (gp:make-image-from-port pixmap) dest-image)))
-    (gp:with-pixmap-graphics-port (pixmap port 32 32 :background :transparent :clear t)
-      (let* ((font (gp:find-best-font pixmap (gp:make-font-description
-                                              :family "Courier New" :size 32 :weight :bold)))
-             (char (char (string-upcase name) 0))
-             (width (gp:get-char-width pixmap char font))
-             (ascent (gp:get-char-ascent pixmap char font)))
-        (gp:draw-circle pixmap (* 32 0.35) 16 (* 16 0.9) :foreground :deepskyblue2 :filled t)
-        (gp:draw-circle pixmap (* 32 0.65) 16 16 :foreground :dodgerblue2 :filled t)
-        (gp:draw-circle pixmap 16 16 12 :foreground :white :filled t)
-        (gp:draw-character pixmap char (/ (- 32 width) 2) ascent :font font :foreground :midnightblue)
-        (gp:externalize-and-write-image pixmap (gp:make-image-from-port pixmap) dest-image2x)))))
+    (capi:contain
+     (make-instance
+      'capi:output-pane
+      :display-callback
+      (lambda (port &rest args)
+        (declare (ignore args))
+        (gp:with-pixmap-graphics-port (pixmap port 16 16 :background :transparent :clear t)
+          (let* ((font (gp:find-best-font pixmap (gp:make-font-description
+                                                  :family "Courier New" :size 16 :weight :bold)))
+                 (char (char (string-upcase name) 0))
+                 (width (gp:get-char-width pixmap char font))
+                 (ascent (gp:get-char-ascent pixmap char font)))
+            (gp:draw-circle pixmap (* 16 0.35) 8 (* 8 0.9) :foreground :deepskyblue2 :filled t)
+            (gp:draw-circle pixmap (* 16 0.65) 8 8 :foreground :dodgerblue2 :filled t)
+            (gp:draw-circle pixmap 8 8 6 :foreground :white :filled t)
+            (gp:draw-character pixmap char (/ (- 16 width) 2) ascent :font font :foreground :midnightblue)
+            (gp:externalize-and-write-image pixmap (gp:make-image-from-port pixmap) dest-image)))
+        (gp:with-pixmap-graphics-port (pixmap port 32 32 :background :transparent :clear t)
+          (let* ((font (gp:find-best-font pixmap (gp:make-font-description
+                                                  :family "Courier New" :size 32 :weight :bold)))
+                 (char (char (string-upcase name) 0))
+                 (width (gp:get-char-width pixmap char font))
+                 (ascent (gp:get-char-ascent pixmap char font)))
+            (gp:draw-circle pixmap (* 32 0.35) 16 (* 16 0.9) :foreground :deepskyblue2 :filled t)
+            (gp:draw-circle pixmap (* 32 0.65) 16 16 :foreground :dodgerblue2 :filled t)
+            (gp:draw-circle pixmap 16 16 12 :foreground :white :filled t)
+            (gp:draw-character pixmap char (/ (- 32 width) 2) ascent :font font :foreground :midnightblue)
+            (gp:externalize-and-write-image pixmap (gp:make-image-from-port pixmap) dest-image2x)))
+        (capi:destroy (capi:element-interface port))))
+     :display-state :hidden)))
 
 ;; Entry parsing
 
